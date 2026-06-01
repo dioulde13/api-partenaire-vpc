@@ -14,6 +14,7 @@ const { getPool } = require("./config/database");
 const authRoutes = require("./routes/authRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
 const partnerRoutes = require("./routes/partnerRoutes");
+const externalRoutes = require("./routes/externalRoutes");
 
 const app = express();
 
@@ -39,7 +40,7 @@ app.use(
       "https://dev-vpcbackoffice-stat.ecash-guinee.com",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-api-key"],
     credentials: true,
   }),
 );
@@ -118,6 +119,7 @@ app.get("/api/test-db", async (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/partners", partnerRoutes);
+app.use("/api/external", externalRoutes);
 
 // ─── 404 Handler ─────────────────────────────────────────────────
 app.use((req, res) => {

@@ -122,6 +122,54 @@ async function getTransactions(req, res) {
   }
 }
 
+
+// ─── GET /api/external/transaction-status/:reference ──────────────
+// ✅ API indépendante pour les partenaires (authentification par API Key fixe)
+async function searchstatusTransaction(req, res) {
+  try {
+    const { referencestatus } = req.params;
+
+
+
+
+    if (!referencestatus) {
+      return res.status(400).json({
+        status: 400,
+        message: "Référence requise.",
+      });
+    }
+
+    const searchParams = {
+      reference: { type: sql.NVarChar, value: referencestatus },
+    };
+
+    const result = await executeQuery(
+      `SELECT ${SELECTED_COLUMNS}
+       FROM viewTransactionsPartners
+       WHERE (vcReference = @reference OR ReferencePartenaire = @reference)`,
+      searchParams,
+    );
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: `Aucune transaction trouvée pour la référence « ${referencestatus} ».`,
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      data: result.recordset[0],
+    });
+  } catch (error) {
+    console.error("❌ Erreur searchstatusTransaction:", error.message);
+    return res.status(500).json({
+      status: 500,
+      message: "Erreur lors de la recherche de la transaction.",
+    });
+  }
+}
+
 // ─── GET /api/transactions/search/:reference ──────────────────────
 async function searchTransaction(req, res) {
   try {
@@ -320,5 +368,6 @@ module.exports = {
   getTransactions,
   searchTransaction,
   getStats,
+  searchstatusTransaction,
   exportTransactions,
 };
