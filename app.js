@@ -15,6 +15,7 @@ const authRoutes = require("./routes/authRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
 const partnerRoutes = require("./routes/partnerRoutes");
 const externalRoutes = require("./routes/externalRoutes");
+const vignetteRoutes = require("./routes/vignetteRoutes");
 
 const app = express();
 
@@ -120,6 +121,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/partners", partnerRoutes);
 app.use("/api/external", externalRoutes);
+app.use("/api/vignette", vignetteRoutes);
 
 // ─── 404 Handler ─────────────────────────────────────────────────
 app.use((req, res) => {
